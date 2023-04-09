@@ -1,65 +1,60 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import {useCallback, useState, useEffect} from 'react';
+//import { StatusBar } from "expo-status-bar";
+import {StyleSheet, Text, View} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import StartGameScreen from './src/screens/StartGameScreen';
+import MainMenuScreen from './src/screens/MainMenuScreen';
+import MissionListScreen from './src/screens/MissionListScreen';
+import SuperHeroesProfile from './src/screens/SuperHeroesProfile';
+import SaveScore from './src/screens/SaveScore';
+import SettingScreen from './src/screens/SettingScreen';
+import {Provider} from 'react-redux';
+import store from './store/redux/Store';
 
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+//import * as SplashScreen from "expo-splash-screen";
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const Stack = createNativeStackNavigator();
+//SplashScreen.preventAutoHideAsync();
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+export default function App() {
+  const [appIsReady, setAppIsReady] = useState(false);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  setTimeout(() => setAppIsReady(true), 3000);
 
+  if (appIsReady) {
+    SplashScreen.hideAsync();
+  }
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View>
-          <Text>Hellow BPM NO EXPO</Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <>
+      <Provider store={store}>
+        {/* <StatusBar style="light" /> */}
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName={'Main'}
+            screenOptions={{
+              headerShown: false,
+            }}>
+            <Stack.Screen
+              style={styles.rootContainer}
+              name="startScreen"
+              component={StartGameScreen}
+            />
+            <Stack.Screen name="Main" component={MainMenuScreen} />
+            <Stack.Screen name="Save" component={SaveScore} />
+            <Stack.Screen name="Missions" component={MissionListScreen} />
+            <Stack.Screen name="SuperHeros" component={SuperHeroesProfile} />
+            <Stack.Screen name="Setting" component={SettingScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    </>
   );
 }
-
+//====================
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  rootContainer: {
+    flex: 1,
   },
 });
-
-export default App;
